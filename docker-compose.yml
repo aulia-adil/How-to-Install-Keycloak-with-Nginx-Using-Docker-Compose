@@ -1,0 +1,22 @@
+services:
+  keycloak:
+    image: quay.io/keycloak/keycloak:21.0.1
+    container_name: keycloak
+    ports:
+      - "8090:8080"
+    environment:
+      KEYCLOAK_ADMIN: admin
+      KEYCLOAK_ADMIN_PASSWORD: admin
+      KC_HOSTNAME_URL: http://${PUBLIC_IP_ADDRESS}:${NGINX_ACCESS_PORT}
+      KC_PROXY: edge
+      KC_LOG_LEVEL: debug
+      KC_HOSTNAME_STRICT_BACKCHANNEL: true
+      KC_HOSTNAME_ADMIN_URL: http://${PUBLIC_IP_ADDRESS}:${NGINX_ACCESS_PORT}
+    command: [ "start-dev"]
+  nginx:
+    image: nginx:1.19.0-alpine
+    volumes:
+      - ./default.conf:/etc/nginx/conf.d/default.conf:ro
+    command: ["nginx-debug", '-g', 'daemon off;']
+    ports:
+      - ${NGINX_ACCESS_PORT}:80
