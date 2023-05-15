@@ -1,5 +1,9 @@
 # How to Install Keycloak with Nginx Using Docker Compose
 
+Video tutorial:
+
+[![Watch the video](https://img.youtube.com/vi/WRNOCh_Cu8A/maxresdefault.jpg)](https://youtu.be/WRNOCh_Cu8A)
+
 ## Prerequisites:
 
 We must've installed and understood:
