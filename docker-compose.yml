@@ -1,7 +1,6 @@
 services:
   keycloak:
     image: quay.io/keycloak/keycloak:21.0.1
-    container_name: keycloak
     ports:
       - "8090:8080"
     environment:
@@ -10,8 +9,13 @@ services:
       KC_HOSTNAME_URL: http://${PUBLIC_IP_ADDRESS}:${NGINX_ACCESS_PORT}
       KC_PROXY: edge
       KC_LOG_LEVEL: debug
-      KC_HOSTNAME_STRICT_BACKCHANNEL: true
+      KC_HOSTNAME_STRICT_BACKCHANNEL: "true"
       KC_HOSTNAME_ADMIN_URL: http://${PUBLIC_IP_ADDRESS}:${NGINX_ACCESS_PORT}
+      KC_DB_URL: jdbc:postgresql://pgdb:5432/postgres
+      KC_DB_USERNAME: postgres
+      KC_DB_PASSWORD: example
+      KC_DB: postgres
+      KC_DB_SCHEMA: public
     command: [ "start-dev"]
   nginx:
     image: nginx:1.19.0-alpine
@@ -20,3 +24,13 @@ services:
     command: ["nginx-debug", '-g', 'daemon off;']
     ports:
       - ${NGINX_ACCESS_PORT}:80
+  pgdb:
+    image: postgres:12.13-bullseye
+    volumes:
+      - ./postgres-data/data:/var/lib/postgresql/data
+    ports:
+      - 5431:5432
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_DB: postgres
+      POSTGRES_PASSWORD: example
